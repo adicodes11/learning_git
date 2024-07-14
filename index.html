@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Embedded Code Editor</title>
+    <style>
+        #editor {
+            width: 800px;
+            height: 600px;
+        }
+        #controls {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="controls">
+        <button id="runButton">Run Code Button</button>
+    </div>
+    <div id="editor"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.27.0/min/vs/loader.min.js"></script>
+    <script>
+        require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.27.0/min/vs' }});
+        require(['vs/editor/editor.main'], function() {
+            var editor = monaco.editor.create(document.getElementById('editor'), {
+                value: `function helloWorld() {\n\tconsole.log('Hello, world!');\n}\nhelloWorld();`,
+                language: 'javascript'
+            });
+
+            document.getElementById('runButton').addEventListener('click', function() {
+                var code = editor.getValue();
+                runCode(code);
+            });
+
+            function runCode(code) {
+                try {
+                    // Create a new script element
+                    var script = document.createElement('script');
+                    script.text = code;
+                    
+                    // Append the script to the document body
+                    document.body.appendChild(script);
+                    
+                    // Remove the script element after execution
+                    document.body.removeChild(script);
+                } catch (e) {
+                    console.error('Error executing code:', e);
+                }
+            }
+        });
+    </script>
+    <p><h1>Hello World</h1></p>
+</body>
+</html>
